@@ -1,0 +1,1 @@
+export type eventMouseHandler = {pageX: number; target: { offsetLeft: number; offsetTop: number; }; pageY: number};
