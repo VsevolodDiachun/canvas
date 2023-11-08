@@ -5,7 +5,7 @@ interface ToolState {
 }
 
 const initialState: ToolState = {
-      tool: null
+    tool: null
 }
 
 export const toolSlice = createSlice({
@@ -13,8 +13,17 @@ export const toolSlice = createSlice({
     initialState,
     reducers: {
       setTool(state, action: PayloadAction<any>){						
-            state.tool = action.payload
-      }
+        state.tool = action.payload
+      },
+      setFillColor(state, action: PayloadAction<string>) {
+        state.tool.fillColor = action.payload
+      },
+      setStrokeColor(state, action: PayloadAction<string>) {
+        state.tool.strokeColor = action.payload
+      },
+      setLineWidth(state, action: PayloadAction<string>) {
+        state.tool.lineWidth = action.payload
+      },
     }
 })
 

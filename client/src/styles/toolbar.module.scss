@@ -50,7 +50,6 @@
   }
 }
 
-
 .settingBar {
   height: $toolbar-height;
   background-color: white;
@@ -60,4 +59,12 @@
   width: 100%;
   box-shadow: 0 4px 5px gray;
   top:$toolbar-height;
+
+  &__input {
+    margin-left: 5px;
+  }
+
+  &__lable {
+    margin-left: 10px;
+  }
 }

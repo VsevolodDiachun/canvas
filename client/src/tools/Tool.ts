@@ -1,35 +1,68 @@
 export default class Tool {
+    // constructor(canvas: HTMLCanvasElement | null) {
     canvas: any
-    ctx: any
+    ctx: any 
     constructor(canvas: any) {
         this.canvas = canvas
         //this.imgReturn()
-        this.ctx = canvas.getContext('2d')
+        if (canvas) this.ctx = canvas.getContext('2d')
+        //this.ctx = null
+        
         this.destroyEvents()
+    }
+
+    set fillColor(color: string) {
+        this.ctx.fillStyle = color
+    }
+
+    set strokeColor(color: string) {
+        this.ctx.strokeStyle = color
+    }
+
+    set lineWidth(width: string) {
+        this.ctx.lineWidth = width
     }
 
     // imgReturn() {
     //     const canvasElement = document.createElement('canvas');
     //     canvasElement.width = 1000;
     //     canvasElement.height = 600;
-    //     const canvasDataURL = this.canvas.toDataURL()
     //     const img = new Image()
+    //     const {fff, fff2} = this.canvas
+    //     this.canvas = canvasElement
+    //     this.ctx = fff
+    //     img.src = fff2
     //     img.onload = () => {
-    //         const context = canvasElement.getContext('2d');
-    //         if (context) {
-    //         context.drawImage(img, 0, 0);
-    //         } else {
-    //         console.error("getContext('2d') returned null");
+    //         try {
+    //             this.ctx.drawImage(img, 0, 0, canvasElement.width, canvasElement.height)
+            
+            
+            
+    //             //context.drawImage(img, 0, 0, canvasElement.width, canvasElement.height);
+    //             // let f3 = this.canvas
+    //             // this.canvas = canvasElement
+    //             // //this.canvas.src = img.src;
+    //             // console.log('fff1')
+    //             // //console.log(this.canvas)
+    //             // this.ctx = this.canvas.getContext('2d')
+    //             // console.log('fff2')
+    //             // console.log(f3)
+    //             // console.log(this.canvas)
+    //             // this.ctx.drawImage(img.src, 0, 0, this.canvas.width, this.canvas.height);
+    //             // console.log('fff3')
+    //             // //console.log(this.canvas)
+    //             // console.log(this.ctx)
+    //         } catch (e) {
+    //             console.log(e)
     //         }
     //     }
-    //     img.src = canvasDataURL
-    //     //this.canvas = img.src
-    //     console.log(img.src)
     // }
 
     destroyEvents() {
-        this.canvas.onmousemove = null
-        this.canvas.onmousedown = null
-        this.canvas.onmouseup = null
+        if (this.canvas) {
+            this.canvas.onmousemove = null
+            this.canvas.onmousedown = null
+            this.canvas.onmouseup = null
+        }
     }
 }

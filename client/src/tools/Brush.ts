@@ -1,3 +1,4 @@
+import { eventMouseHandler } from "../models/eventMouseHandler";
 import Tool from "./Tool";
 
 export default class Brush extends Tool {
@@ -8,20 +9,20 @@ export default class Brush extends Tool {
     }
 
     listen() {
-        this.canvas.onmousemove = this.mouseMoveHandler.bind(this)
-        this.canvas.onmousedown = this.mouseDownHandler.bind(this)
-        this.canvas.onmouseup = this.mouseUpHandler.bind(this)
+            this.canvas.onmousemove = this.mouseMoveHandler.bind(this)
+            this.canvas.onmousedown = this.mouseDownHandler.bind(this)
+            this.canvas.onmouseup = this.mouseUpHandler.bind(this)
     }
 
     mouseUpHandler() {
         this.mouseDown = false
     }
-    mouseDownHandler(e: any) {
+    mouseDownHandler(e: eventMouseHandler) {
         this.mouseDown = true
         this.ctx.beginPath()
         this.ctx.moveTo(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
     }
-    mouseMoveHandler(e: any) {
+    mouseMoveHandler(e: eventMouseHandler) {
         if (this.mouseDown) {
             this.draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
         }
@@ -30,6 +31,5 @@ export default class Brush extends Tool {
     draw(x: number, y: number) {
         this.ctx.lineTo(x, y)
         this.ctx.stroke()
-        console.log('draw brush')
     }
 }

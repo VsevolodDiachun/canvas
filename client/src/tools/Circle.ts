@@ -1,3 +1,4 @@
+import { eventMouseHandler } from "../models/eventMouseHandler";
 import Tool from "./Tool";
 
 export default class Circle extends Tool {
@@ -16,7 +17,7 @@ export default class Circle extends Tool {
         this.canvas.onmouseup = this.mouseUpHandler.bind(this)
     }
 
-    mouseDownHandler(e: any) {
+    mouseDownHandler(e: eventMouseHandler) {
         this.mouseDown = true
         let canvasData = this.canvas.toDataURL()
         this.ctx.beginPath()
@@ -25,11 +26,11 @@ export default class Circle extends Tool {
         this.saved = canvasData
     }
 
-    mouseUpHandler(e: any) {
+    mouseUpHandler(e: eventMouseHandler) {
         this.mouseDown = false
     }
 
-    mouseMoveHandler(e: any) {
+    mouseMoveHandler(e: eventMouseHandler) {
         if(this.mouseDown && this.startX && this.startY) {
             let curentX =  e.pageX-e.target.offsetLeft
             let curentY =  e.pageY-e.target.offsetTop
@@ -40,7 +41,7 @@ export default class Circle extends Tool {
         }
     }
 
-    draw(x: number,y: number,r: number) {
+    draw(x: number, y: number, r: number) {
         const img = new Image()
         img.src = this.saved
         img.onload = async () => {

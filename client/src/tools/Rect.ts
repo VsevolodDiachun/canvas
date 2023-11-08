@@ -1,3 +1,4 @@
+import { eventMouseHandler } from "../models/eventMouseHandler";
 import Tool from "./Tool";
 
 export default class Rect extends Tool {
@@ -19,14 +20,14 @@ export default class Rect extends Tool {
     mouseUpHandler() {
         this.mouseDown = false
     }
-    mouseDownHandler(e: any) {
+    mouseDownHandler(e: eventMouseHandler) {
         this.mouseDown = true
         this.ctx.beginPath()
         this.startX = e.pageX - e.target.offsetLeft
         this.startY = e.pageY - e.target.offsetTop
         this.saved = this.canvas.toDataURL()
     }
-    mouseMoveHandler(e: any) {
+    mouseMoveHandler(e: eventMouseHandler) {
         if (this.mouseDown && this.startX && this.startY) {
             let currentX = e.pageX - e.target.offsetLeft
             let currentY = e.pageY - e.target.offsetTop
