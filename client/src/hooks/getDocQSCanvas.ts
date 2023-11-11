@@ -1,0 +1,1 @@
+export const getDQSCanvas = () => document.querySelector('#canvas')

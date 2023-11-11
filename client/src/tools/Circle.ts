@@ -6,8 +6,8 @@ export default class Circle extends Tool {
     startX: number | undefined;
     startY: number | undefined;
     saved: any;
-    constructor(canvas: any) {
-        super(canvas);
+    constructor(canvas: any, socket: WebSocket, id: string | null) {
+        super(canvas, socket, id);
         this.listen()
     }
 

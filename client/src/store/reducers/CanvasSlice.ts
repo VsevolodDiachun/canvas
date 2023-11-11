@@ -1,32 +1,47 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {WebSocketType} from "../../utils/consts";
 
 interface CanvasState {
-      canvas: HTMLCanvasElement | null;
-      undoList: any;
-      redoList: any
+    canvas: HTMLCanvasElement | null;
+    undoList: any;
+    redoList: any;
+    username: string | null;
+    socket: WebSocketType | null,
+    sessionId: string | null
 }
 
 const initialState: CanvasState = {
-      canvas: null,
-      undoList: [],
-      redoList: []
-
+    canvas: null,
+    undoList: [],
+    redoList: [],
+    username: '',
+    socket: null,
+    sessionId: null
 }
 
 export const canvasSlice = createSlice({
     name: 'canvas',
     initialState,
     reducers: {
-      setCanvas(state, action: PayloadAction<any>){						
+        setUsername(state, action:PayloadAction<string>) {
+            state.username = action.payload
+        },
+        setCanvas(state, action: PayloadAction<any>){
             state.canvas = action.payload
-      },
-      pushToUndo(state, action: PayloadAction<any>) {
+        },
+        pushToUndo(state, action: PayloadAction<any>) {
             state.undoList.push(action.payload)
-      },
-      pushToRedo(state, action: PayloadAction<any>) {
+        },
+        pushToRedo(state, action: PayloadAction<any>) {
             state.redoList.push(action.payload)
-      },
-      undo(state) {
+        },
+        setSocket(state, action: PayloadAction<WebSocketType>) {
+            state.socket = action.payload
+        },
+        setSessionId(state, action: PayloadAction<string>) {
+            state.sessionId = action.payload
+        },
+        undo(state) {
             const ctx = state.canvas?.getContext('2d')
             const canvas = state.canvas
             if (state.undoList.length > 0 && state.canvas) {
@@ -42,9 +57,9 @@ export const canvasSlice = createSlice({
                 }
             } else {
                   if(state.canvas) ctx?.clearRect(0, 0, state.canvas.width, state.canvas.height)
-      
+
             }
-      },
+        },
         redo(state) {
             const ctx = state.canvas?.getContext('2d')
             const canvas = state.canvas

@@ -1,16 +1,12 @@
 import React from 'react';
-import style from './styles/app.module.scss';
-import Toolbar from './components/Toolbar';
-import SettingBar from './components/SettingBar';
-import Canvas from './components/Canvas';
+import { RouterProvider } from 'react-router-dom';
+import {useAppRouter} from "./routes/AppRouter";
+
 
 function App() {
-  return (
-    <div className={style.app}>
-      <Toolbar />
-      <SettingBar />
-      <Canvas />
-    </div>
+    const router = useAppRouter()
+    return (
+      <RouterProvider router={router} />
   );
 }
 

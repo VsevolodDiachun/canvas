@@ -1,9 +1,13 @@
 export default class Tool {
     // constructor(canvas: HTMLCanvasElement | null) {
-    canvas: any
-    ctx: any 
-    constructor(canvas: any) {
+    canvas: any;
+    ctx: any;
+    socket: WebSocket;
+    id: string | null;
+    constructor(canvas: HTMLCanvasElement, socket: WebSocket, id: string | null) {
         this.canvas = canvas
+        this.socket = socket
+        this.id = id
         //this.imgReturn()
         if (canvas) this.ctx = canvas.getContext('2d')
         //this.ctx = null

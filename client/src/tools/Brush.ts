@@ -3,8 +3,8 @@ import Tool from "./Tool";
 
 export default class Brush extends Tool {
     mouseDown: boolean | undefined;
-    constructor(canvas: any) {
-        super(canvas)
+    constructor(canvas: any, socket: WebSocket, id: string | null) {
+        super(canvas, socket, id)
         this.listen()
     }
 
@@ -16,6 +16,15 @@ export default class Brush extends Tool {
 
     mouseUpHandler() {
         this.mouseDown = false
+        if (this.socket) {
+            this.socket.send(JSON.stringify({
+                method: 'draw',
+                id: this.id,
+                figure: {
+                    type: 'finish',
+                }
+            }))
+        }
     }
     mouseDownHandler(e: eventMouseHandler) {
         this.mouseDown = true
@@ -23,13 +32,27 @@ export default class Brush extends Tool {
         this.ctx.moveTo(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
     }
     mouseMoveHandler(e: eventMouseHandler) {
-        if (this.mouseDown) {
-            this.draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
+        if (this.mouseDown && this.socket) {
+            //this.draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
+            this.socket.send(JSON.stringify({
+                method: 'draw',
+                id: this.id,
+                figure: {
+                    type: 'brush',
+                    x: e.pageX - e.target.offsetLeft,
+                    y: e.pageY - e.target.offsetTop
+                }
+            }))
         }
     }
 
-    draw(x: number, y: number) {
-        this.ctx.lineTo(x, y)
-        this.ctx.stroke()
+    static draw(ctx: any, x: number, y: number) {
+        //ctx.strokeStyle = "white"
+        ctx.lineTo(x, y)
+        ctx.stroke()
+    }
+    static drawEraser(ctx: any, x: number, y: number) {
+        ctx.lineTo(x, y)
+        ctx.stroke()
     }
 }

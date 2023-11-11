@@ -8,8 +8,8 @@ export default class Line extends Tool {
     currentY: number | undefined;
     saved: any;
     
-    constructor(canvas: any) {
-        super(canvas);
+    constructor(canvas: any, socket: WebSocket, id: string | null) {
+        super(canvas, socket, id);
         this.listen()
         this.name = 'Line'
     }
@@ -39,7 +39,6 @@ export default class Line extends Tool {
         }
     }
 
-
     draw(x: number,y: number) {
         const img = new Image()
         img.src = this.saved
@@ -51,6 +50,5 @@ export default class Line extends Tool {
             this.ctx.lineTo(x, y)
             this.ctx.stroke()
         }
-
     }
 }
