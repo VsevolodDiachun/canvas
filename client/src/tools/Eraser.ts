@@ -1,13 +1,15 @@
-import Brush from "./Brush";
 import {eventMouseHandler} from "../models/eventMouseHandler";
 import Tool from "./Tool";
 
 export default class Eraser extends Tool {
 
     mouseDown: boolean | undefined;
+    ctxColorStyle: string;
     constructor(canvas: any, socket: WebSocket, id: string | null) {
         super(canvas, socket, id)
         this.listen()
+        console.log(this.ctx.strokeStyle)
+        this.ctxColorStyle = this.ctx.strokeStyle
     }
 
     listen() {
@@ -27,6 +29,7 @@ export default class Eraser extends Tool {
                 }
             }))
         }
+        this.ctx.strokeStyle = this.ctxColorStyle
     }
     mouseDownHandler(e: eventMouseHandler) {
         this.mouseDown = true
@@ -45,22 +48,25 @@ export default class Eraser extends Tool {
                     y: e.pageY - e.target.offsetTop
                 }
             }))
+            this.ctx.strokeStyle = 'white'
         }
     }
 
+    // draw(x: number, y: number) {
+    //     //this.ctx.strokeStyle = "white"
+    //     this.ctx.lineTo(x, y)
+    //     this.ctx.stroke()
+    // }
 
-
-
-
-    draw(x: number, y: number) {
-        this.ctx.strokeStyle = "white"
-        this.ctx.lineTo(x, y)
-        this.ctx.stroke()
-    }
-
-    static drawEraser(ctx: any, x: number, y: number) {
-        ctx.strokeStyle = "white"
-        ctx.lineTo(x, y)
-        ctx.stroke()
+    static drawEraser(ctx: CanvasRenderingContext2D | null | undefined, x: number, y: number, lineWidth: number, figureType: string) {
+        //ctx.strokeStyle = "white"
+        if (ctx) {
+            if (figureType === 'eraser') {
+                ctx.strokeStyle = 'white'
+            }
+            ctx.lineWidth = lineWidth
+            ctx.lineTo(x, y)
+            ctx.stroke()
+        }
     }
 }

@@ -1,1 +1,1 @@
-export const getDQSCanvas = () => document.querySelector('#canvas')
+export const getDocQSCanvas = (): HTMLCanvasElement | null => document.querySelector('#canvas')

@@ -9,24 +9,39 @@ import {Button, Form, InputGroup, Modal} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import Rect from "../tools/Rect";
 import Eraser from "../tools/Eraser";
+import Circle from "../tools/Circle";
+import Line from "../tools/Line";
+import { toast } from 'react-toastify';
+import axios from "axios";
+import {getDocQSCanvas} from "../hooks/getDocQSCanvas";
 
 const Canvas: FC = () => {
-      const {setCanvas, pushToUndo, setUsername, setSocket, setSessionId} = canvasSlice.actions
-      const {setTool} = toolSlice.actions
+      const {pushToUndo, setUsername, setSocket, setSessionId, setCanvas} = canvasSlice.actions
+      const {setTool, updateColor} = toolSlice.actions
       const {username} = useAppSelector(state => state.canvasReducer)
+      const {strokeColorValue, fillColorValue, lineWidthValue} = useAppSelector(state => state.toolReducer)
       const dispatch = useAppDispatch()
       const [modal, setModal] = useState(true)
-      const [usernameRef, setUsernameRef] = useState<string>('')
+      const [usernameState, setUsernameState] = useState<string>('')
       const canvasRef = useRef<HTMLCanvasElement | null>(null)
-      //const usernameRef = useRef<HTMLInputElement | null>(null)
       const params= useParams()
 
       useEffect(() => {
-            // const canvasGetContext = canvasRef.current?.getContext('2d')
-            // const contextToDataURL = canvasRef.current?.toDataURL()
             if (canvasRef.current) {
                   dispatch(setCanvas(canvasRef.current))
             }
+            let ctx = canvasRef.current?.getContext('2d')
+            axios.get(`http://localhost:5001/image?id=${params.id}`)
+                .then(response => {
+                      const img = new Image()
+                      img.src = response.data
+                      img.onload = () => {
+                            if (ctx) {
+                                  ctx.clearRect(0, 0, canvasRef.current?.width as number, canvasRef.current?.height as number)
+                                  ctx.drawImage(img, 0, 0, canvasRef.current?.width as number, canvasRef.current?.height as number)
+                            }
+                      }
+                })
       }, [])
 
       useEffect(() => {
@@ -47,7 +62,12 @@ const Canvas: FC = () => {
                         //console.log(msg.figure)
                         switch (msg.method) {
                               case 'connection':
-                                    console.log(`User ${msg.username} joined`)
+                                    toast.info(`User ${msg.username} joined`, {
+                                    closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        theme: "colored",
+                              });
                                 break
                               case 'draw':
                                     drawHandler(msg)
@@ -62,15 +82,22 @@ const Canvas: FC = () => {
             const ctx = canvasRef.current?.getContext('2d')
             switch (figure.type) {
                   case 'brush':
-                        Brush.draw(ctx, figure.x, figure.y)
+                        Brush.draw(ctx, figure.x, figure.y, figure.fillColor, figure.strokeColor, figure.lineWidth)
+                        //console.log('brush')
+                        break
+                  case 'line':
+                        Line.drawStatic(ctx, figure.start, figure.end, figure.fillColor, figure.strokeColor, figure.lineWidth)
                         //console.log('brush')
                         break
                   case 'rect':
-                        Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height)
-                        //console.log('rect')
+                        Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.fillColor, figure.strokeColor, figure.lineWidth)
+                        break
+                  case 'circle':
+                        Circle.staticDraw(ctx, figure.x, figure.y, figure.r, figure.fillColor, figure.strokeColor, figure.lineWidth)
                         break
                   case 'eraser':
-                        Eraser.drawEraser(ctx, figure.x, figure.y)
+                        //Brush.draw(ctx, figure.x, figure.y, figure.fillColor, figure.strokeColor, figure.lineWidth, figure.type)
+                        Eraser.drawEraser(ctx, figure.x, figure.y, figure.lineWidth, figure.type)
                       //console.log('eraser')
                         break
                   case 'finish':
@@ -80,20 +107,23 @@ const Canvas: FC = () => {
       }
 
       const mouseDownHandler = () => {
+            dispatch(updateColor({strokeColorValue, fillColorValue, lineWidthValue}))
+
             dispatch(pushToUndo(canvasRef.current?.toDataURL()))
+
+      }
+
+      const mouseUpHandler = () => {
+            axios.post(`http://localhost:5001/image?id=${params.id}`, {img: getDocQSCanvas()?.toDataURL()})
+                .catch(() => console.log('error Canvas mouseDownHandler'))
       }
 
       const connectHandler = () => {
-            if (usernameRef) {
-                  dispatch(setUsername(usernameRef))
+            if (usernameState) {
+                  dispatch(setUsername(usernameState))
                   setModal(false)
             }
       }
-
-      // useEffect(() => {
-      //       console.log(usernameRef.current?.value)
-      // }, [usernameRef.current?.value])
-      //console.log(usernameRef.current?.value)
 
       return (
             <div className={style.canvas}>
@@ -106,14 +136,14 @@ const Canvas: FC = () => {
                                     <Form.Control
                                         placeholder="Username"
                                         //ref={usernameRef}
-                                        value={usernameRef}
-                                        onChange={(e) => setUsernameRef(e.target.value)}
+                                        value={usernameState}
+                                        onChange={(e) => setUsernameState(e.target.value)}
                                     />
                               </InputGroup>
                         </Modal.Body>
                         <Modal.Footer>
                               <Button
-                                  variant={usernameRef ? "primary" : 'secondary'}
+                                  variant={username ? "primary" : 'secondary'}
                                   onClick={() => connectHandler()}
                               >
                                     Login
@@ -122,7 +152,8 @@ const Canvas: FC = () => {
                   </Modal>
                   <canvas 
                         id='canvas'
-                        onMouseDown={() => mouseDownHandler()} 
+                        onMouseDown={() => mouseDownHandler()}
+                        onMouseUp={() => mouseUpHandler()}
                         ref={canvasRef} 
                         width={1000} 
                         height={600} 

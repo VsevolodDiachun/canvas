@@ -1,6 +1,7 @@
 import { eventMouseHandler } from "../models/eventMouseHandler";
 import Tool from "./Tool";
 import {WebSocketType} from "../utils/consts";
+import {finishDrawMessage} from "../hooks/finishDrawMessage";
 
 export default class Rect extends Tool {
     mouseDown: boolean | undefined;
@@ -9,6 +10,8 @@ export default class Rect extends Tool {
     saved: any;
     width: number | undefined;
     height: number | undefined;
+    currentX: number | undefined;
+    currentY: number | undefined;
     constructor(canvas: HTMLCanvasElement, socket: WebSocketType, id: string | null) {
         super(canvas, socket, id)
         this.listen()
@@ -31,9 +34,14 @@ export default class Rect extends Tool {
                     x: this.startX,
                     y: this.startY,
                     width: this.width,
-                    height: this.height
+                    height: this.height,
+                    fillColor: this.ctx.fillStyle,
+                    strokeColor: this.ctx.strokeStyle,
+                    lineWidth: this.ctx.lineWidth
                 }
             }))
+            this.width = this.height = 0
+            if (this.socket && this.id) finishDrawMessage(this.socket, this.id)
         }
     }
     mouseDownHandler(e: eventMouseHandler) {
@@ -45,10 +53,10 @@ export default class Rect extends Tool {
     }
     mouseMoveHandler(e: eventMouseHandler) {
         if (this.mouseDown && this.startX && this.startY) {
-            let currentX = e.pageX - e.target.offsetLeft
-            let currentY = e.pageY - e.target.offsetTop
-            this.width = currentX - this.startX
-            this.height = currentY - this.startY
+            this.currentX = e.pageX - e.target.offsetLeft
+            this.currentY = e.pageY - e.target.offsetTop
+            this.width = this.currentX - this.startX
+            this.height = this.currentY - this.startY
             this.draw(this.startX, this.startY, this.width, this.height)
         }
     }
@@ -66,10 +74,15 @@ export default class Rect extends Tool {
         }
     }
 
-    static staticDraw(ctx: any, x: number, y: number, w: number, h: number) {
-        ctx.beginPath()
-        ctx.rect(x, y, w, h)
-        ctx.fill()
-        ctx.stroke()
+    static staticDraw(ctx: CanvasRenderingContext2D | null | undefined, x: number, y: number, w: number, h: number, fillColor: string, strokeColor: string, lineWidth: number) {
+        if (ctx) {
+            ctx.fillStyle = fillColor
+            ctx.strokeStyle = strokeColor
+            ctx.lineWidth = lineWidth
+            ctx.beginPath()
+            ctx.rect(x, y, w, h)
+            ctx.fill()
+            ctx.stroke()
+        }
     }
 }

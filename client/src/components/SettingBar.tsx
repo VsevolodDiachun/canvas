@@ -1,11 +1,12 @@
 import React, {FC} from 'react';
 import style from '../styles/toolbar.module.scss';
-import { useAppDispatch } from '../hooks/redux';
+import {useAppDispatch, useAppSelector} from '../hooks/redux';
 import { toolSlice } from '../store/reducers/ToolSlice';
 
 
 const SettingBar: FC = () => {
       const {setLineWidth, setStrokeColor} = toolSlice.actions
+    const {strokeColorValue} = useAppSelector(state => state.toolReducer)
       const dispatch = useAppDispatch()
       return (
             <div className={style.settingBar}>
@@ -16,7 +17,7 @@ const SettingBar: FC = () => {
                         Товщина лінії:
                   </label>
                   <input 
-                        onChange={e => dispatch(setLineWidth(e.target.value))}
+                        onChange={e => dispatch(setLineWidth(+e.target.value))}
                         id='line-width' 
                         className={style.settingBar__input} 
                         type="number" 
@@ -33,7 +34,8 @@ const SettingBar: FC = () => {
                   <input 
                         id='stroke-color' 
                         type='color' 
-                        className={style.settingBar__input} 
+                        className={style.settingBar__input}
+                        value={strokeColorValue}
                         onChange={e => dispatch(setStrokeColor(e.target.value))}
                   />
             </div>
