@@ -46,7 +46,7 @@ export const canvasSlice = createSlice({
             const ctx = canvas?.getContext('2d')
             if (state.undoList.length > 0 && state.canvas) {
                 let dataURL = state.undoList.pop()
-                state.redoList.push(state.canvas().toDataURL())
+                state.redoList.push(state.canvas.toDataURL())
                 let img = new Image()
                 img.src = dataURL
                 img.onload = () => {
@@ -56,16 +56,15 @@ export const canvasSlice = createSlice({
                     }
                 }
             } else {
-                  if(state.canvas()) ctx?.clearRect(0, 0, state.canvas.width, state.canvas.height)
-
+                  if(state.canvas) ctx?.clearRect(0, 0, state.canvas.width, state.canvas.height)
             }
         },
         redo(state) {
-            const ctx = state.canvas()?.getContext('2d')
-            const canvas = state.canvas()
-            if (state.redoList.length > 0 && state.canvas()) {
+            const ctx = state.canvas?.getContext('2d')
+            const canvas = state.canvas
+            if (state.redoList.length > 0 && state.canvas) {
                 let dataURL = state.redoList.pop()
-                state.undoList.push(state.canvas().toDataURL())
+                state.undoList.push(state.canvas.toDataURL())
                 let img = new Image()
                 img.src = dataURL
                 img.onload = () => {

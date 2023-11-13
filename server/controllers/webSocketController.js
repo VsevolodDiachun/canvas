@@ -1,18 +1,15 @@
-const { connectionHandler } = require("../utilities/connectionHandler");
-const { broadcastConnection } = require("../utilities/broadcastConnection");
+const connectionHandler = require("../handlers/connectionHandler");
+const broadcastConnection = require("../handlers/broadcastConnection");
 
-const webSocketController = (ws, req) => {
-    //console.log('CONNECTING SUCCESS')
-    //ws.send('YOU CONNECTED')
+const webSocketController = (aWss) => (ws, req) => {
     ws.on('message', (msg) => {
         msg = JSON.parse(msg)
-
         switch (msg.method) {
             case 'connection' :
-                connectionHandler(ws, msg)
+                connectionHandler(ws, msg, aWss)
                 break
             case 'draw':
-                broadcastConnection(ws, msg)
+                broadcastConnection(ws, msg, aWss)
                 break
         }
     })

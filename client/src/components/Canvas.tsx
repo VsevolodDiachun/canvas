@@ -27,9 +27,7 @@ const Canvas: FC = () => {
       const params= useParams()
 
       useEffect(() => {
-            if (canvasRef.current) {
-                  dispatch(setCanvas(canvasRef.current))
-            }
+            if (canvasRef.current) dispatch(setCanvas(canvasRef.current))
             let ctx = canvasRef.current?.getContext('2d')
             axios.get(`http://localhost:5001/image?id=${params.id}`)
                 .then(response => {
@@ -59,7 +57,6 @@ const Canvas: FC = () => {
                   }
                   socket.onmessage = (event: MessageEvent) => {
                         let msg = JSON.parse(event.data)
-                        //console.log(msg.figure)
                         switch (msg.method) {
                               case 'connection':
                                     toast.info(`User ${msg.username} joined`, {
@@ -67,7 +64,7 @@ const Canvas: FC = () => {
                                         pauseOnHover: true,
                                         draggable: true,
                                         theme: "colored",
-                              });
+                              })
                                 break
                               case 'draw':
                                     drawHandler(msg)

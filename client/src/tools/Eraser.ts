@@ -45,18 +45,20 @@ export default class Eraser extends Tool {
                 figure: {
                     type: 'eraser',
                     x: e.pageX - e.target.offsetLeft,
-                    y: e.pageY - e.target.offsetTop
+                    y: e.pageY - e.target.offsetTop,
+                    lineWidth: this.ctx.lineWidth
                 }
             }))
             this.ctx.strokeStyle = 'white'
         }
     }
 
-    // draw(x: number, y: number) {
-    //     //this.ctx.strokeStyle = "white"
-    //     this.ctx.lineTo(x, y)
-    //     this.ctx.stroke()
-    // }
+    draw(x: number, y: number) {
+        //this.ctx.strokeStyle = "white"
+        this.ctx.lineTo(x, y)
+        this.ctx.stroke()
+
+    }
 
     static drawEraser(ctx: CanvasRenderingContext2D | null | undefined, x: number, y: number, lineWidth: number, figureType: string) {
         //ctx.strokeStyle = "white"
