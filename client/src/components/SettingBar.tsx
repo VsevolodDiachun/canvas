@@ -3,7 +3,6 @@ import style from '../styles/toolbar.module.scss';
 import {useAppDispatch, useAppSelector} from '../hooks/redux';
 import { toolSlice } from '../store/reducers/ToolSlice';
 
-
 const SettingBar: FC = () => {
       const {setLineWidth, setStrokeColor} = toolSlice.actions
     const {strokeColorValue} = useAppSelector(state => state.toolReducer)

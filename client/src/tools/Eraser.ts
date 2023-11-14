@@ -2,7 +2,6 @@ import {eventMouseHandler} from "../models/eventMouseHandler";
 import Tool from "./Tool";
 
 export default class Eraser extends Tool {
-
     mouseDown: boolean | undefined;
     ctxColorStyle: string;
     constructor(canvas: any, socket: WebSocket, id: string | null) {
@@ -38,7 +37,6 @@ export default class Eraser extends Tool {
     }
     mouseMoveHandler(e: eventMouseHandler) {
         if (this.mouseDown && this.socket) {
-            //this.draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
             this.socket.send(JSON.stringify({
                 method: 'draw',
                 id: this.id,
@@ -54,14 +52,11 @@ export default class Eraser extends Tool {
     }
 
     draw(x: number, y: number) {
-        //this.ctx.strokeStyle = "white"
         this.ctx.lineTo(x, y)
         this.ctx.stroke()
-
     }
 
     static drawEraser(ctx: CanvasRenderingContext2D | null | undefined, x: number, y: number, lineWidth: number, figureType: string) {
-        //ctx.strokeStyle = "white"
         if (ctx) {
             if (figureType === 'eraser') {
                 ctx.strokeStyle = 'white'

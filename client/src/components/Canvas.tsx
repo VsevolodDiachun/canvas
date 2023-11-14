@@ -80,11 +80,9 @@ const Canvas: FC = () => {
             switch (figure.type) {
                   case 'brush':
                         Brush.draw(ctx, figure.x, figure.y, figure.fillColor, figure.strokeColor, figure.lineWidth)
-                        //console.log('brush')
                         break
                   case 'line':
                         Line.drawStatic(ctx, figure.start, figure.end, figure.fillColor, figure.strokeColor, figure.lineWidth)
-                        //console.log('brush')
                         break
                   case 'rect':
                         Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.fillColor, figure.strokeColor, figure.lineWidth)
@@ -93,9 +91,7 @@ const Canvas: FC = () => {
                         Circle.staticDraw(ctx, figure.x, figure.y, figure.r, figure.fillColor, figure.strokeColor, figure.lineWidth)
                         break
                   case 'eraser':
-                        //Brush.draw(ctx, figure.x, figure.y, figure.fillColor, figure.strokeColor, figure.lineWidth, figure.type)
                         Eraser.drawEraser(ctx, figure.x, figure.y, figure.lineWidth, figure.type)
-                      //console.log('eraser')
                         break
                   case 'finish':
                         if (ctx) ctx.beginPath()
@@ -105,9 +101,7 @@ const Canvas: FC = () => {
 
       const mouseDownHandler = () => {
             dispatch(updateColor({strokeColorValue, fillColorValue, lineWidthValue}))
-
             dispatch(pushToUndo(canvasRef.current?.toDataURL()))
-
       }
 
       const mouseUpHandler = () => {
@@ -132,7 +126,6 @@ const Canvas: FC = () => {
                               <InputGroup className="mb-3">
                                     <Form.Control
                                         placeholder="Username"
-                                        //ref={usernameRef}
                                         value={usernameState}
                                         onChange={(e) => setUsernameState(e.target.value)}
                                     />

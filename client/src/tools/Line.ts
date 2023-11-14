@@ -8,8 +8,6 @@ export default class Line extends Tool {
     currentX: number | undefined;
     currentY: number | undefined;
     saved: any;
-    startX: number | undefined;
-    startY: number | undefined;
     endX: number | undefined;
     endY: number | undefined;
 
@@ -39,7 +37,6 @@ export default class Line extends Tool {
         if (this.socket) {
             this.endX = e.pageX - e.target.offsetLeft;
             this.endY = e.pageY - e.target.offsetTop;
-
             this.socket.send(JSON.stringify({
                 method: 'draw',
                 id: this.id,

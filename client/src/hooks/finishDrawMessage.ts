@@ -7,7 +7,6 @@ export function finishDrawMessage(socket: WebSocket | null | undefined, id: stri
                 type: 'finish',
             }
         };
-
         socket.send(JSON.stringify(message));
     }
 }

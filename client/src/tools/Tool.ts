@@ -1,5 +1,4 @@
 export default class Tool {
-    // constructor(canvas: HTMLCanvasElement | null) {
     canvas: any;
     ctx: any;
     socket: WebSocket;
@@ -8,10 +7,7 @@ export default class Tool {
         this.canvas = canvas
         this.socket = socket
         this.id = id
-        //this.imgReturn()
         if (canvas) this.ctx = canvas.getContext('2d')
-        //this.ctx = null
-        
         this.destroyEvents()
     }
 
@@ -39,9 +35,7 @@ export default class Tool {
     //     img.onload = () => {
     //         try {
     //             this.ctx.drawImage(img, 0, 0, canvasElement.width, canvasElement.height)
-            
-            
-            
+
     //             //context.drawImage(img, 0, 0, canvasElement.width, canvasElement.height);
     //             // let f3 = this.canvas
     //             // this.canvas = canvasElement
